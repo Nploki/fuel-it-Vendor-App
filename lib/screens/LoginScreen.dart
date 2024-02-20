@@ -3,6 +3,7 @@ import 'package:fuel_it_vendor_app/screens/SignUpScreen.dart';
 import 'package:fuel_it_vendor_app/screens/signup.dart';
 
 class LoginScreen extends StatelessWidget {
+  static String id = "LoginScreen";
   const LoginScreen({Key? key}) : super(key: key);
 
   @override

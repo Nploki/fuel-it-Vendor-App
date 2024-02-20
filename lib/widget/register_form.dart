@@ -347,6 +347,7 @@ class _RegisterFormState extends State<RegisterForm> {
                                             address: bunkAddres)
                                         .then((value) {
                                       setState(() {
+                                        _formKey.currentState?.reset();
                                         _isLoading = false;
                                       });
                                       //AFTER SUCCESSFUL SAVE DATA

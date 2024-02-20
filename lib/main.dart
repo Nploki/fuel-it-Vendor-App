@@ -2,7 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fuel_it_vendor_app/firebase_options.dart';
 import 'package:fuel_it_vendor_app/provider/authprovider.dart';
+import 'package:fuel_it_vendor_app/screens/LoginScreen.dart';
 import 'package:fuel_it_vendor_app/screens/SignUpScreen.dart';
+import 'package:fuel_it_vendor_app/screens/profile/profile_screen.dart';
+import 'package:fuel_it_vendor_app/screens/welcome_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:fuel_it_vendor_app/provider/auth_provier.dart';
 import 'package:fuel_it_vendor_app/provider/location_provider.dart';
@@ -31,13 +34,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: sign_up(),
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        initialRoute: WelcomeScreen.id,
+        routes: {
+          WelcomeScreen.id: (context) => WelcomeScreen(),
+          LoginScreen.id: (context) => LoginScreen(),
+          profile_screen.id: (context) => profile_screen(),
+          sign_up.id: (context) => sign_up(),
+        });
   }
 }

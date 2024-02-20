@@ -3,6 +3,7 @@ import 'package:fuel_it_vendor_app/widget/image_picker.dart';
 import 'package:fuel_it_vendor_app/widget/register_form.dart';
 
 class sign_up extends StatelessWidget {
+  static String id = "sign_up";
   const sign_up({super.key});
 
   @override

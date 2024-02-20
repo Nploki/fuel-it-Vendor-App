@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_it_vendor_app/screens/LoginScreen.dart';
 import 'package:fuel_it_vendor_app/screens/SignUpScreen.dart';
+import 'package:fuel_it_vendor_app/screens/signup.dart';
 
 class WelcomeScreen extends StatelessWidget {
+  static String id = "WelcomeScreen";
   const WelcomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -65,7 +67,7 @@ class WelcomeScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SignUpScreen()),
+                    MaterialPageRoute(builder: (context) => sign_up()),
                   );
                 },
                 child: Text("SIGN UP"),
