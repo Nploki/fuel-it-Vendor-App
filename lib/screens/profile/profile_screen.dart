@@ -136,13 +136,7 @@ class profile_screen extends StatelessWidget {
               title: "Log-Out",
               icon: (Icons.logout),
               textColor: Color.fromARGB(255, 173, 39, 29),
-              onPress: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const WelcomeScreen()),
-                );
-              },
+              onPress: () {},
               endIcon: true,
             ),
           ],

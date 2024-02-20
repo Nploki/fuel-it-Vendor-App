@@ -7,10 +7,11 @@ import 'package:location/location.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Auth_Provider extends ChangeNotifier {
-  late File image;
+  late File image = File('path_to_empty_file.txt');
   bool isPicAvail = false;
   String pickerError = '';
   String error = '';
+  String msg = '';
   String email = '';
   late double shopLatitude;
   late double shopLongitude;
@@ -18,7 +19,7 @@ class Auth_Provider extends ChangeNotifier {
   Future<File> getImage() async {
     final picker = ImagePicker();
     final XFile? pickedFile =
-        await picker.pickImage(source: ImageSource.gallery);
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 20);
 
     if (pickedFile != null) {
       this.image = File(pickedFile.path);
@@ -84,6 +85,48 @@ class Auth_Provider extends ChangeNotifier {
     }
   }
 
+  // SELLER LOGIN
+  Future<UserCredential?> loginSeller(
+      BuildContext context, String email, String password) async {
+    this.email = email;
+    notifyListeners();
+    UserCredential? userCredential;
+    notifyListeners();
+
+    try {
+      userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      this.error = e.code;
+      notifyListeners();
+      return null;
+    } catch (e) {
+      this.error = e.toString();
+      notifyListeners();
+      return null;
+    }
+  }
+
+  Future<String?> reset_Password(String email) async {
+    this.email = email;
+    notifyListeners();
+
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      return null;
+    } on FirebaseAuthException catch (e) {
+      this.error = e.code;
+      notifyListeners();
+      return e.message.toString();
+    } catch (e) {
+      this.error = e.toString();
+      notifyListeners();
+      return e.toString();
+    }
+  }
+
 //save vendor details to firestore
 
   Future<void> saveSellerDataToDb(
@@ -110,6 +153,7 @@ class Auth_Provider extends ChangeNotifier {
       'rating': 0.00,
       'totalrating': 0,
       'isTopPicked': true,
+      'accVerified': true, //only verified vendor can sell
     });
     return null;
   }

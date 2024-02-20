@@ -4,8 +4,10 @@ import 'package:fuel_it_vendor_app/firebase_options.dart';
 import 'package:fuel_it_vendor_app/provider/authprovider.dart';
 import 'package:fuel_it_vendor_app/screens/LoginScreen.dart';
 import 'package:fuel_it_vendor_app/screens/SignUpScreen.dart';
+import 'package:fuel_it_vendor_app/screens/home_screen.dart';
 import 'package:fuel_it_vendor_app/screens/profile/profile_screen.dart';
 import 'package:fuel_it_vendor_app/screens/welcome_screen.dart';
+import 'package:fuel_it_vendor_app/widget/forgot_Password.dart';
 import 'package:provider/provider.dart';
 import 'package:fuel_it_vendor_app/provider/auth_provier.dart';
 import 'package:fuel_it_vendor_app/provider/location_provider.dart';
@@ -45,7 +47,10 @@ class MyApp extends StatelessWidget {
           WelcomeScreen.id: (context) => WelcomeScreen(),
           LoginScreen.id: (context) => LoginScreen(),
           profile_screen.id: (context) => profile_screen(),
+          Forgot_Password_screen.id: (context) => Forgot_Password_screen(),
+          WelcomeScreen.id: (context) => WelcomeScreen(),
           sign_up.id: (context) => sign_up(),
+          home_Screen.id: (context) => home_Screen(),
         });
   }
 }

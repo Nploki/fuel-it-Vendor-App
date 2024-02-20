@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:fuel_it_vendor_app/provider/authprovider.dart';
 import 'package:fuel_it_vendor_app/screens/LoginScreen.dart';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fuel_it_vendor_app/screens/home_screen.dart';
 import 'package:fuel_it_vendor_app/screens/profile/profile_screen.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -41,21 +41,28 @@ class _RegisterFormState extends State<RegisterForm> {
     FirebaseStorage _storage = FirebaseStorage.instance;
 
     try {
-      // Upload file
-      await _storage
-          .ref("upload/bunkProfile/${_nameTextController.text}")
-          .putFile(file);
+      // Generate a unique file name
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+      // Get file extension
+      String fileExtension = file.path.split('.').last;
+
+      // Upload file with explicitly specified content type
+      await _storage.ref("upload/bunkProfile/$fileName.$fileExtension").putFile(
+            file,
+            SettableMetadata(contentType: 'image/$fileExtension'),
+          );
 
       // Get download URL after successful upload
       String downloadURL = await _storage
-          .ref("upload/bunkProfile/${_nameTextController.text}")
+          .ref("upload/bunkProfile/$fileName.$fileExtension")
           .getDownloadURL();
 
       return downloadURL;
     } on FirebaseException catch (e) {
       print("Firebase Storage Upload Error: ${e.code}");
       // Handle the error, you might want to return a default or error URL
-      return "Error occurred during upload";
+      return "Error occurred during upload: ${e.message}";
     }
   }
 
@@ -64,6 +71,7 @@ class _RegisterFormState extends State<RegisterForm> {
   String password = '';
   String mobileno = '';
   String shopName = '';
+  String? _selectedValue;
 
   // TextEditingController for each form field
   var _nameTextController = TextEditingController();
@@ -85,9 +93,15 @@ class _RegisterFormState extends State<RegisterForm> {
     }
 
     return _isLoading
-        ? CircularProgressIndicator(
-            valueColor:
-                AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+        ? Center(
+            child: Container(
+              width: 50,
+              height: 50,
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).primaryColor),
+              ),
+            ),
           )
         : Scaffold(
             body: Expanded(
@@ -123,6 +137,31 @@ class _RegisterFormState extends State<RegisterForm> {
                                     hintText: "Business Name",
                                     border: OutlineInputBorder(),
                                   ),
+                                ),
+                              ),
+                              const SizedBox(height: 7.5),
+                              DropdownButtonFormField<String>(
+                                value: _selectedValue,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    _selectedValue = newValue;
+                                  });
+                                },
+                                items: [
+                                  'Value 1',
+                                  'Value 2',
+                                  'Value 3',
+                                  'Value 4',
+                                  'Value 5',
+                                ].map((value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                decoration: const InputDecoration(
+                                  labelText: 'Select a value',
+                                  border: OutlineInputBorder(),
                                 ),
                               ),
                               const SizedBox(height: 7.5),
@@ -201,7 +240,7 @@ class _RegisterFormState extends State<RegisterForm> {
                                     }
                                     return null;
                                   },
-                                  obscureText: _isConfirmPasswordVisible,
+                                  obscureText: _isPasswordVisible,
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.fingerprint),
                                     labelText: "Password",
@@ -209,7 +248,7 @@ class _RegisterFormState extends State<RegisterForm> {
                                     border: OutlineInputBorder(),
                                     suffixIcon: IconButton(
                                       icon: Icon(
-                                        _isConfirmPasswordVisible
+                                        _isPasswordVisible
                                             ? Icons.visibility_off
                                             : Icons.visibility,
                                       ),
@@ -245,7 +284,7 @@ class _RegisterFormState extends State<RegisterForm> {
                                     });
                                     return null;
                                   },
-                                  obscureText: !_isPasswordVisible,
+                                  obscureText: !_isConfirmPasswordVisible,
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.fingerprint),
                                     labelText: "Re-Enter Password",
@@ -253,7 +292,7 @@ class _RegisterFormState extends State<RegisterForm> {
                                     border: OutlineInputBorder(),
                                     suffixIcon: IconButton(
                                       icon: Icon(
-                                        _isPasswordVisible
+                                        _isConfirmPasswordVisible
                                             ? Icons.visibility
                                             : Icons.visibility_off,
                                       ),
@@ -352,7 +391,7 @@ class _RegisterFormState extends State<RegisterForm> {
                                       });
                                       //AFTER SUCCESSFUL SAVE DATA
                                       Navigator.pushReplacementNamed(
-                                          context, profile_screen.id);
+                                          context, home_Screen.id);
                                     });
                                   },
                                 );
@@ -366,7 +405,7 @@ class _RegisterFormState extends State<RegisterForm> {
                             });
                           });
                         } else {
-                          Scaffoldmessage('Add Profile Pic');
+                          Scaffoldmessage('Fill all details Correctly');
                         }
                       },
 

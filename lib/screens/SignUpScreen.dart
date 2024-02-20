@@ -1,14 +1,11 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:provider/provider.dart';
 import 'package:fuel_it_vendor_app/provider/auth_provier.dart';
-import 'package:fuel_it_vendor_app/provider/location_provider.dart';
 import 'package:fuel_it_vendor_app/screens/LoginScreen.dart';
 import 'package:fuel_it_vendor_app/screens/profile/profile_screen.dart';
 
@@ -34,22 +31,45 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late String shopname;
   late String shopno;
   late String password;
+
+  List<String> pumpNames = [];
+  String selectedPumpName = '';
+  String selectedPumpImageUrl = '';
+
   String? _selectedImagePath;
   File? _selectedImage;
 
-  var _nameTextController = TextEditingController();
+  final _nameTextController = TextEditingController();
   final _emailTextController = TextEditingController();
   final _phoneTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
   final _addressTextController = TextEditingController();
   final _confirmPasswordTextController = TextEditingController();
-  TextEditingController _imageFileNameController = TextEditingController();
+  final TextEditingController _imageFileNameController =
+      TextEditingController();
+  Map<String, dynamic> data = {};
+  Future<void> fetchPumps() async {
+    final pumps = await FirebaseFirestore.instance.collection('pumps').get();
+    if (pumps.docs.isNotEmpty) {
+      data = pumps.docs.first.data();
+      setState(() {
+        pumpNames = data.keys.toList();
+        selectedPumpName = pumpNames.first;
+        selectedPumpImageUrl = data[selectedPumpName];
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchPumps();
+  }
 
   Future<void> _pickImage() async {
     final imagePicker = ImagePicker();
     final XFile? pickedFile =
         await imagePicker.pickImage(source: ImageSource.gallery);
-
     setState(() async {
       if (pickedFile != null) {
         _selectedImage = File(pickedFile.path);
@@ -148,6 +168,36 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       labelText: "Business Name",
                                       hintText: "Business Name",
                                       border: OutlineInputBorder()),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 7.5,
+                              ),
+                              Container(
+                                height: 10,
+                                color: Colors.amber,
+                              ),
+                              SizedBox(
+                                height: 70,
+                                child: DropdownButtonFormField<String>(
+                                  value: selectedPumpName,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      selectedPumpName = newValue!;
+                                      selectedPumpImageUrl =
+                                          data[selectedPumpName];
+                                    });
+                                  },
+                                  items: pumpNames
+                                      .map((name) => DropdownMenuItem<String>(
+                                            value: name,
+                                            child: Text(name),
+                                          ))
+                                      .toList(),
+                                  decoration: const InputDecoration(
+                                    labelText: 'Select Pump',
+                                    border: OutlineInputBorder(),
+                                  ),
                                 ),
                               ),
                               const SizedBox(
