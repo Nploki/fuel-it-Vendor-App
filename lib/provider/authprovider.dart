@@ -1,35 +1,45 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:location/location.dart';
-import 'package:image_picker/image_picker.dart';
 
 class Auth_Provider extends ChangeNotifier {
-  late File image = File('path_to_empty_file.txt');
-  bool isPicAvail = false;
-  String pickerError = '';
   String error = '';
   String msg = '';
   String email = '';
   late double shopLatitude;
   late double shopLongitude;
 
-  Future<File> getImage() async {
-    final picker = ImagePicker();
-    final XFile? pickedFile =
-        await picker.pickImage(source: ImageSource.gallery, imageQuality: 20);
-
-    if (pickedFile != null) {
-      this.image = File(pickedFile.path);
-      notifyListeners();
-    } else {
-      this.pickerError = 'No image selected';
-      print('No image selected');
-      notifyListeners();
+  String? getimage(String category) {
+    String imageUrl;
+    switch (category) {
+      case 'Bharath':
+        imageUrl =
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO1GpYyL6r7BZy5pejFe7F0tsrgQ3-8GQWdQ&usqp=CAU';
+        break;
+      case 'Hp':
+        imageUrl =
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZnFugfBQhI6wtLCIxzVCyYA4KlSPnmd7hUQ&usqp=CAU';
+        break;
+      case 'Indian Oil':
+        imageUrl =
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQImaDlH1L6RNiFwpzBS9QxOuFq4yznvnrPYw&usqp=CAU';
+        break;
+      case 'Naayara':
+        imageUrl =
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJDKiUkFQKc4fWLP4TfGQheIyxtp91nl-BY_gN-rcv9hcYge4LzrU5BZj9GLjy_NMt_Tc&usqp=CAU';
+        break;
+      case 'Shell':
+        imageUrl =
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAuCF6WdP5VkCHz8Z2r0HgHl526fdLTwM1sA&usqp=CAU';
+        break;
+      default:
+        imageUrl =
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROuZ6TJztuG2zH8J2YBudvWTjxMPHoqQk--g&usqp=CAU';
+        break;
     }
-    return this.image;
+
+    return imageUrl;
   }
 
   Future<Position> getCurrentAddress() async {
@@ -145,15 +155,16 @@ class Auth_Provider extends ChangeNotifier {
       'mobileno': mobileno,
       'url': url,
       'email': this.email,
-      // 'latitude': latitude,
-      // 'longitude': longitude,
       'address': address,
       'location': GeoPoint(latitude, longitude),
       'shopOpen': true,
       'rating': 0.00,
       'totalrating': 0,
-      'isTopPicked': true,
-      'accVerified': true, //only verified vendor can sell
+      'isTopPicked': false,
+      'accVerified': false,
+      'water': true,
+      'air': true,
+      'toilet': true
     });
     return null;
   }

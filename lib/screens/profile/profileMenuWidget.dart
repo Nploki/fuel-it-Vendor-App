@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 class profileMenuWidget extends StatelessWidget {
   const profileMenuWidget({
     Key? key,
@@ -24,13 +26,16 @@ class profileMenuWidget extends StatelessWidget {
         height: 40,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
-          color: Color.fromARGB(255, 145, 189, 226),
+          color: Colors.blue,
         ),
-        child: Icon(icon),
+        child: Icon(
+          icon,
+          color: Colors.white,
+        ),
       ),
       title: Text(
         title,
-        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
             .apply(color: textColor),
       ),
       trailing: endIcon
@@ -39,9 +44,9 @@ class profileMenuWidget extends StatelessWidget {
               height: 30,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
-                color: Color.fromARGB(255, 222, 225, 228),
+                color: const Color.fromARGB(255, 222, 225, 228),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_forward_ios_outlined,
                 size: 18,
               ),

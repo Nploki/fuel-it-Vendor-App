@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fuel_it_vendor_app/screens/LoginScreen.dart';
-import 'package:fuel_it_vendor_app/screens/SignUpScreen.dart';
 import 'package:fuel_it_vendor_app/screens/signup.dart';
 
 class WelcomeScreen extends StatelessWidget {

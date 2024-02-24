@@ -1,12 +1,8 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:fuel_it_vendor_app/provider/authprovider.dart';
 import 'package:fuel_it_vendor_app/screens/LoginScreen.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fuel_it_vendor_app/screens/home_screen.dart';
-import 'package:fuel_it_vendor_app/screens/profile/profile_screen.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -35,43 +31,13 @@ class _RegisterFormState extends State<RegisterForm> {
         '${place.locality} ,\n${place.administrativeArea} - ${place.postalCode} , ${place.country}.';
   }
 
-  Future<String> uploadFile(filepath) async {
-    File file = File(filepath);
-
-    FirebaseStorage _storage = FirebaseStorage.instance;
-
-    try {
-      // Generate a unique file name
-      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-
-      // Get file extension
-      String fileExtension = file.path.split('.').last;
-
-      // Upload file with explicitly specified content type
-      await _storage.ref("upload/bunkProfile/$fileName.$fileExtension").putFile(
-            file,
-            SettableMetadata(contentType: 'image/$fileExtension'),
-          );
-
-      // Get download URL after successful upload
-      String downloadURL = await _storage
-          .ref("upload/bunkProfile/$fileName.$fileExtension")
-          .getDownloadURL();
-
-      return downloadURL;
-    } on FirebaseException catch (e) {
-      print("Firebase Storage Upload Error: ${e.code}");
-      // Handle the error, you might want to return a default or error URL
-      return "Error occurred during upload: ${e.message}";
-    }
-  }
-
   String bunkAddres = '';
   String email = '';
   String password = '';
   String mobileno = '';
   String shopName = '';
   String? _selectedValue;
+  String _url = "";
 
   // TextEditingController for each form field
   var _nameTextController = TextEditingController();
@@ -140,30 +106,39 @@ class _RegisterFormState extends State<RegisterForm> {
                                 ),
                               ),
                               const SizedBox(height: 7.5),
-                              DropdownButtonFormField<String>(
-                                value: _selectedValue,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    _selectedValue = newValue;
-                                  });
-                                },
-                                items: [
-                                  'Value 1',
-                                  'Value 2',
-                                  'Value 3',
-                                  'Value 4',
-                                  'Value 5',
-                                ].map((value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                                decoration: const InputDecoration(
-                                  labelText: 'Select a value',
-                                  border: OutlineInputBorder(),
+                              Container(
+                                height: 70,
+                                child: DropdownButtonFormField<String>(
+                                  value: _selectedValue,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      _selectedValue = newValue;
+                                    });
+                                  },
+                                  items: [
+                                    'Bharath',
+                                    'Hp',
+                                    'Indian Oil',
+                                    'Naayara',
+                                    'Shell',
+                                  ].map((value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                        style: const TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w300),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  decoration: const InputDecoration(
+                                    labelText: 'Bump Category',
+                                    border: OutlineInputBorder(),
+                                  ),
                                 ),
                               ),
+
                               const SizedBox(height: 7.5),
 
                               // Email TextFormField
@@ -358,7 +333,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   const SizedBox(height: 25),
                   // "Register" Button
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 1,
+                    width: MediaQuery.of(context).size.width * 0.9,
                     child: ElevatedButton(
                       // Inside your onPressed callback in the "Register" Button
                       onPressed: () {
@@ -366,43 +341,35 @@ class _RegisterFormState extends State<RegisterForm> {
                           setState(() {
                             _isLoading = true;
                           });
+                          _auth_data
+                              .registerSeller(email, password)
+                              .then((credential) async {
+                            if (credential.user?.uid != null) {
+                              // register vendor
+                              String? imageUrl =
+                                  await _auth_data.getimage(_selectedValue!);
 
-                          // Call getImage to set a valid image before using it in uploadFile
-                          _auth_data.getImage().then((file) {
-                            _auth_data
-                                .registerSeller(email, password)
-                                .then((credential) {
-                              if (credential.user?.uid != null) {
-                                uploadFile(file.path).then(
-                                  (url) {
-                                    //register vendor
-                                    _auth_data
-                                        .saveSellerDataToDb(
-                                            url: url,
-                                            shopName: shopName,
-                                            mobileno: mobileno,
-                                            latitude: lat,
-                                            longitude: longt,
-                                            address: bunkAddres)
-                                        .then((value) {
-                                      setState(() {
-                                        _formKey.currentState?.reset();
-                                        _isLoading = false;
-                                      });
-                                      //AFTER SUCCESSFUL SAVE DATA
-                                      Navigator.pushReplacementNamed(
-                                          context, home_Screen.id);
-                                    });
-                                  },
-                                );
-                              } else {
-                                //register failed
-                                setState(() {
-                                  _isLoading = false;
+                              if (imageUrl != null) {
+                                _auth_data
+                                    .saveSellerDataToDb(
+                                  url: imageUrl,
+                                  shopName: shopName,
+                                  mobileno: mobileno,
+                                  latitude: lat,
+                                  longitude: longt,
+                                  address: bunkAddres,
+                                )
+                                    .then((value) {
+                                  setState(() {
+                                    _formKey.currentState?.reset();
+                                    _isLoading = false;
+                                  });
+                                  // AFTER SUCCESSFUL SAVE DATA
+                                  Navigator.pushReplacementNamed(
+                                      context, home_Screen.id);
                                 });
-                                Scaffoldmessage(_auth_data.error);
                               }
-                            });
+                            }
                           });
                         } else {
                           Scaffoldmessage('Fill all details Correctly');
@@ -414,13 +381,11 @@ class _RegisterFormState extends State<RegisterForm> {
                   ),
                   const SizedBox(height: 7.5),
 
-                  // "OR" Text
                   const Text("- OR -"),
                   const SizedBox(height: 7.5),
 
-                  // Already have an Account? LOGIN Button
                   SizedBox(
-                    width: double.infinity,
+                    width: MediaQuery.of(context).size.width * 0.9,
                     height: 45,
                     child: OutlinedButton(
                       onPressed: () {

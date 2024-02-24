@@ -11,18 +11,18 @@ class profile_update extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_rounded,
             color: Colors.black,
           ),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const profile_screen()),
+              MaterialPageRoute(builder: (context) => profile_screen()),
             );
           },
         ),
-        title: Text(
+        title: const Text(
           "Edit Profile",
           style: TextStyle(
             color: Colors.black,
@@ -34,17 +34,17 @@ class profile_update extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const profile_screen(),
+                  builder: (context) => profile_screen(),
                 ),
               );
             },
-            icon: Icon(Icons.nights_stay_outlined),
+            icon: const Icon(Icons.nights_stay_outlined),
             color: Colors.black,
           )
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(30),
+        padding: const EdgeInsets.all(30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -68,9 +68,9 @@ class profile_update extends StatelessWidget {
                     height: 35,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
-                      color: Color.fromARGB(255, 255, 251, 12),
+                      color: const Color.fromARGB(255, 255, 251, 12),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.edit_rounded,
                       size: 18,
                     ),
@@ -80,7 +80,7 @@ class profile_update extends StatelessWidget {
             ),
             Form(
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 20),
+                padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -95,7 +95,7 @@ class profile_update extends StatelessWidget {
                             ),
                           )),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     TextFormField(
@@ -109,7 +109,7 @@ class profile_update extends StatelessWidget {
                             ),
                           )),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     TextFormField(
@@ -123,7 +123,7 @@ class profile_update extends StatelessWidget {
                             ),
                           )),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     TextFormField(
@@ -138,7 +138,7 @@ class profile_update extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     SizedBox(
@@ -149,10 +149,10 @@ class profile_update extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const profile_screen()),
+                                builder: (context) => profile_screen()),
                           );
                         },
-                        child: Text(
+                        child: const Text(
                           'Edit Profile',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
@@ -162,13 +162,13 @@ class profile_update extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 25,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Joined 30 Octomber 2023"),
+                        const Text("Joined 30 Octomber 2023"),
                         OutlinedButton(
                           onPressed: () {
                             Navigator.push(
@@ -180,8 +180,8 @@ class profile_update extends StatelessWidget {
                           child: const Text("Delete"),
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
-                            primary: Colors.redAccent.withOpacity(0.2),
-                            onPrimary: Colors.red,
+                            backgroundColor: Colors.redAccent.withOpacity(0.2),
+                            foregroundColor: Colors.red,
                             side: BorderSide.none,
                             shape: const StadiumBorder(),
                           ),

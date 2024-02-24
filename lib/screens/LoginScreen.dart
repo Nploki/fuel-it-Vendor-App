@@ -1,13 +1,13 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:fuel_it_vendor_app/provider/authprovider.dart';
+import 'package:fuel_it_vendor_app/screens/dashboard_screen.dart';
 import 'package:fuel_it_vendor_app/widget/forgot_Password.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:fuel_it_vendor_app/screens/SignUpScreen.dart';
 import 'package:fuel_it_vendor_app/screens/home_screen.dart';
 import 'package:fuel_it_vendor_app/screens/signup.dart';
-import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   static String id = "LoginScreen";
@@ -65,27 +65,30 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextFormField(
-                        controller: _emailTextController,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please Enter your Email Id';
-                          }
-                          final bool _isValid = EmailValidator.validate(
-                              _emailTextController.text);
-                          if (!_isValid) {
-                            return "Enter a Valid Email-Id";
-                          }
-                          setState(() {
-                            email = value;
-                          });
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.email_outlined),
-                            labelText: "E-Mail",
-                            hintText: "E-Mail",
-                            border: OutlineInputBorder()),
+                      SizedBox(
+                        width: size.width * 0.9,
+                        child: TextFormField(
+                          controller: _emailTextController,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please Enter your Email Id';
+                            }
+                            final bool _isValid = EmailValidator.validate(
+                                _emailTextController.text);
+                            if (!_isValid) {
+                              return "Enter a Valid Email-Id";
+                            }
+                            setState(() {
+                              email = value;
+                            });
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                              prefixIcon: Icon(Icons.email_outlined),
+                              labelText: "E-Mail",
+                              hintText: "E-Mail",
+                              border: OutlineInputBorder()),
+                        ),
                       ),
                       const SizedBox(
                         height: 20,
@@ -164,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   _isLoading = false;
                                 });
                                 Navigator.pushReplacementNamed(
-                                    context, home_Screen.id);
+                                    context, dashboard_screen.id);
                               } else {
                                 setState(() {
                                   _isLoading = false;

@@ -1,15 +1,19 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fuel_it_vendor_app/firebase_options.dart';
+import 'package:fuel_it_vendor_app/provider/auth_provier.dart';
 import 'package:fuel_it_vendor_app/provider/authprovider.dart';
 import 'package:fuel_it_vendor_app/screens/LoginScreen.dart';
-import 'package:fuel_it_vendor_app/screens/SignUpScreen.dart';
+import 'package:fuel_it_vendor_app/screens/add_newProduct.dart';
+import 'package:fuel_it_vendor_app/screens/dashboard_screen.dart';
 import 'package:fuel_it_vendor_app/screens/home_screen.dart';
 import 'package:fuel_it_vendor_app/screens/profile/profile_screen.dart';
+import 'package:fuel_it_vendor_app/screens/product_screen.dart';
+import 'package:fuel_it_vendor_app/screens/splash_screen.dart';
 import 'package:fuel_it_vendor_app/screens/welcome_screen.dart';
 import 'package:fuel_it_vendor_app/widget/forgot_Password.dart';
 import 'package:provider/provider.dart';
-import 'package:fuel_it_vendor_app/provider/auth_provier.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fuel_it_vendor_app/provider/location_provider.dart';
 import 'package:fuel_it_vendor_app/screens/signup.dart';
 
@@ -22,7 +26,7 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => Product_provider()),
         ChangeNotifierProvider(create: (_) => Auth_Provider()),
         ChangeNotifierProvider(create: (_) => LocationProvider()),
       ],
@@ -42,15 +46,19 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        initialRoute: WelcomeScreen.id,
+        builder: EasyLoading.init(),
+        initialRoute: SplashScreen.id,
         routes: {
-          WelcomeScreen.id: (context) => WelcomeScreen(),
+          SplashScreen.id: (context) => SplashScreen(),
           LoginScreen.id: (context) => LoginScreen(),
           profile_screen.id: (context) => profile_screen(),
           Forgot_Password_screen.id: (context) => Forgot_Password_screen(),
           WelcomeScreen.id: (context) => WelcomeScreen(),
-          sign_up.id: (context) => sign_up(),
           home_Screen.id: (context) => home_Screen(),
+          dashboard_screen.id: (context) => dashboard_screen(),
+          sign_up.id: (context) => sign_up(),
+          product_screen.id: (context) => product_screen(),
+          AddNewProduct.id: (context) => AddNewProduct(),
         });
   }
 }
